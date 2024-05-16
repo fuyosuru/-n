@@ -6,13 +6,13 @@ import os
 import json
 import pickle
 
-class TrieNode:       # một Node của cây trie
+class TrieNode:      
     def __init__(self):
         self.children = {}  
         self.word = False
         self.Meaning = "Không tìm thấy nghĩa của từ này"
 
-class Trie:          # cấu trúc dữ liệu trie
+class Trie:          
     def __init__(self):
         self.root = TrieNode()
 
@@ -26,7 +26,7 @@ class Trie:          # cấu trúc dữ liệu trie
         node.Meaning = Meaning
         return node.word
 
-    def find_suggest(self, node, word):       # hàm giúp tìm những từ có prefix giống với từ đang được nhập vào
+    def find_suggest(self, node, word):     
         if(len(goi_y_list) >= 30):
             return
         for char in alphabet:
@@ -35,7 +35,7 @@ class Trie:          # cấu trúc dữ liệu trie
         if node.word:
             goi_y_list.append(word)
 
-    def search(self, word):         # hàm tìm kiếm xem từ đã nhập có trong cây trie hay không
+    def search(self, word):        
         goi_y_list.clear()
         node = self.root
         for char in word:
@@ -45,7 +45,7 @@ class Trie:          # cấu trúc dữ liệu trie
         self.find_suggest(node, word)
         return node.Meaning
 
-def lay_data():                  # hàm lấy data từ file và chuyển toàn bộ các từ trong data vào cây trie
+def lay_data():                 
     with open(os.path.dirname(os.path.realpath(__file__)) + r"\word_meaning_anh_viet.json", 'r', encoding='utf-8') as f:
         data = json.load(f)
     for key, meaning in data.items():
@@ -103,7 +103,7 @@ def bigger_font(size):
     font.setPointSize(size)
     return font
 
-def typing():     # hàm giúp tìm nhưng từ có khả năng là từ mà người dùng định tìm khi đang nhập từ cần tìm
+def typing():     
     input_value = user_input.text()
     if input_value != '':
         CurrentTree.search(input_value)
@@ -124,7 +124,7 @@ def them_favorite():
         if input_value in favorite_list:
             favorite_list.remove(input_value)
 
-def press_button():    # hàm khi bấm nút tìm kiếm
+def press_button():    
     global checkbox
     input_value = user_input.text()
     Meaning = CurrentTree.search(input_value)
@@ -152,7 +152,7 @@ def press_button():    # hàm khi bấm nút tìm kiếm
     else:
         checkbox.hide()  
 
-def History_giaodien():     # Chức năng History, lưu lại những từ đã từng tìm trước đó
+def History_giaodien():    
     global history_dialog
     history_dialog = QDialog()
     history_dialog.setWindowTitle('History')
@@ -168,12 +168,12 @@ def History_giaodien():     # Chức năng History, lưu lại những từ đã
     history_dialog.setWindowIcon(QIcon(os.path.join(os.path.dirname(os.path.realpath(__file__)) + r"\images2.png")))
     history_dialog.exec_()
 
-def Out_favorite(item):     # hàm thoát chức năng favorite
+def Out_favorite(item):  
     user_input.setText(item.text())
     press_button()
     favorite_dialog.close()
 
-def favorite_giaodien():   # chức năng favorite, lưu lại những từ người dùng muốn lưu
+def favorite_giaodien():   
     global favorite_dialog
     favorite_dialog = QDialog()
     favorite_dialog.setWindowTitle('Favorite')
@@ -189,7 +189,7 @@ def favorite_giaodien():   # chức năng favorite, lưu lại những từ ngư
     backbutton.clicked.connect(favorite_dialog.close)
     favorite_dialog.exec_()
 
-def Out_history(item):   # thoát chức năng history
+def Out_history(item): 
     user_input.setText(item.text())
     press_button()
     history_dialog.close()
@@ -213,7 +213,7 @@ def chuyen_mode(index):
     user_input.clear()
     checkbox.hide()
 
-alphabet = "aàảãáạăằẳẵắặâầẩẫấậbcdđeèẻẽéẹêềểễếệghiìỉĩíịjklmnoòỏõóọôồổỗốộơờởỡớợpqrstuùủũúụưừửữứựvwxyỳỷỹýỵz " # xâu chứa các ký tự tạo nên 1 từ
+alphabet = "aàảãáạăằẳẵắặâầẩẫấậbcdđeèẻẽéẹêềểễếệghiìỉĩíịjklmnoòỏõóọôồổỗốộơờởỡớợpqrstuùủũúụưừửữứựvwxyỳỷỹýỵz " 
 
 SuggestTree_Anh_Anh = Trie()
 SuggestTree_Anh_Viet = Trie()
@@ -229,13 +229,13 @@ favorite_list_Anh_Viet = []
 favorite_list_Viet_Anh = []
 favorite_list_Anh_Anh = []
 
-# dưới đây là phần tạo giao diện người dùng
+
 fuyonary = QApplication(sys.argv)
 giaodien = QWidget()
 layout = QVBoxLayout()
 giaodien.setLayout(layout)
 giaodien.setGeometry(100, 100, 800, 600)
-user_input = QLineEdit(giaodien)    # text box nhập input
+user_input = QLineEdit(giaodien)    
 user_input.setFont(bigger_font(10))
 language_selection = QComboBox(giaodien)
 language_selection.addItems(["Anh - Anh", "Anh - Việt","Việt - Anh"]) 
@@ -276,6 +276,7 @@ giaodien.show()
 language_selection.currentIndexChanged.connect(chuyen_mode)
 lay_data()
 load_data()
+chuyen_mode("Anh - Anh")
 fuyonary.aboutToQuit.connect(save_data)
 CurrentTree=SuggestTree_Anh_Anh
 fuyonary.setStyleSheet("""
