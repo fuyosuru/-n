@@ -6,13 +6,28 @@ import os
 import json
 import pickle
 
-class TrieNode:      
+class TrieNode:
+    '''
+    class TrieNode là một đỉnh của cây Trie, mỗi đỉnh sẽ chứa các nội dung :
+    1. children : Các đỉnh con của đỉnh hiện tại.
+    2. word : Giá trị bool để kiểm tra xem đường đi từ gốc đến đỉnh này có tạo thành 1 từ hay không.
+    3. Meaning : Nghĩa của từ kết thúc tại nốt này.
+    '''
     def __init__(self):
         self.children = {}  
         self.word = False
         self.Meaning = "Không tìm thấy nghĩa của từ này"
 
-class Trie:          
+class Trie:       
+    '''
+    Class Trie là cấu trúc dữ liệu Trie
+    Class Trie chứa đỉnh gốc của một cây Trie
+    Class này có các thao tác sau :
+    1. insert : nhận tham số là một từ, có chức năng thêm một từ mới vào cây Trie
+    2. search : nhận tham số là một từ, có chức năng tìm từ đã cho có trong cây Trie hay không, nếu có thì trả về nghĩa của từ đó
+    3. find_suggest : nhận tham số là một từ, có chức năng tìm các từ có tiền tố giống từ đã cho, các từ tìm được sẽ được lưu vào goi_y_list
+    4. __init__ : tạo đỉnh gốc của cây Trie
+    '''
     def __init__(self):
         self.root = TrieNode()
 
@@ -46,6 +61,13 @@ class Trie:
         return node.Meaning
 
 def lay_data():                 
+    '''
+    Hàm lay_data sẽ đọc data từ 3 file khác nhau chứa từ nghĩa của chúng ứng với 3 chế độ dịch khác nhau của app.
+    - word_meaning_anh_viet.json chứa data của chế độ dịch Anh - Việt
+    - dictionary.json chứa data của chế độ dịch Anh - Anh
+    - word_meaning_viet_anh.json chứa data của chế độ dịch Việt - Anh
+    Data sau khi load xong sẽ được đưa vào các cây Trie tương ứng
+    '''
     with open(os.path.dirname(os.path.realpath(__file__)) + r"\word_meaning_anh_viet.json", 'r', encoding='utf-8') as f:
         data = json.load(f)
     for key, meaning in data.items():
@@ -60,6 +82,9 @@ def lay_data():
         SuggestTree_Viet_Anh.insert(key, meaning)
 
 def save_data():
+    '''
+    Hàm save_data sẽ lưu lại dữ liệu của 2 tính năng history và favorite ứng với từng chế độ dịch
+    '''
     with open(os.path.dirname(os.path.realpath(__file__)) + r"\historylist_Anh_Anh.pkl", 'wb') as f:
         pickle.dump(historylist_Anh_Anh[-1000:], f)
     with open(os.path.dirname(os.path.realpath(__file__)) + r"\favorite_list_Anh_Anh.pkl", 'wb') as f:
@@ -74,6 +99,9 @@ def save_data():
         pickle.dump(favorite_list_Viet_Anh[-1000:], f)
 
 def load_data():
+    '''
+    Hàm load_data sẽ để load dữ liệu của 2 tính năng history và favorite của các lần sử dụng trước đó
+    '''
     global historylist_Anh_Viet,historylist_Anh_Anh,historylist_Viet_Anh,favorite_list_Anh_Anh,favorite_list_Anh_Viet,favorite_list_Viet_Anh
     if os.path.exists(os.path.dirname(os.path.realpath(__file__)) + r"\historylist_Anh_Anh.pkl"):
         with open(os.path.dirname(os.path.realpath(__file__)) + r"\historylist_Anh_Anh.pkl", 'rb') as f:
@@ -99,11 +127,18 @@ def splitPath(path):
 
 
 def bigger_font(size):
+    '''
+    hàm bigger_font nhận tham số là một số nguyên (int), hàm sẽ thay đổi kích cỡ của các object trong GUI dựa trên tham số truyền vào.
+    '''
     font = QFont()
     font.setPointSize(size)
     return font
 
-def typing():     
+def typing():
+    '''
+    hàm typing sẽ được gọi mỗi khi người dùng nhập từ bàn phím 1 chữ mới giúp đưa ra danh sách các từ có tiền tố giống
+    với từ đang có trên thanh tìm kiếm
+    '''
     input_value = user_input.text()
     if input_value != '':
         CurrentTree.search(input_value)
@@ -124,7 +159,11 @@ def them_favorite():
         if input_value in favorite_list:
             favorite_list.remove(input_value)
 
-def press_button():    
+def press_button():
+    '''
+    hàm press_button sẽ được gọi khi người dùng bấm nút search, hàm này sẽ tìm nghĩa của từ có trong thanh tìm kiếm trong cây Trie tương ứng với chế
+    độ dịch hiện tại và ghi kết quả trả về vào text_box ở bên dưới, sau đó đưa từ có trong thanh tìm kiếm vào history
+    ''' 
     global checkbox
     input_value = user_input.text()
     Meaning = CurrentTree.search(input_value)
@@ -152,7 +191,11 @@ def press_button():
     else:
         checkbox.hide()  
 
-def History_giaodien():    
+def History_giaodien():
+    '''
+    Hàm History_giaodien sẽ tạo ra giao diện của chức năng history khi người dùng bấm vào nút history, giao diện sẽ có nút để quay trở lại màn hình chính của app
+    và danh sách các từ có trong history list tương ứng với chế độ dịch hiện tại.
+    '''
     global history_dialog
     history_dialog = QDialog()
     history_dialog.setWindowTitle('History')
@@ -174,6 +217,10 @@ def Out_favorite(item):
     favorite_dialog.close()
 
 def favorite_giaodien():   
+    '''
+    Hàm favorite_giaodien() sẽ tạo ra giao diện của chức năng favorite khi người dùng bấm vào nút favorite, giao diện sẽ có nút để quay trở lại màn hình chính của app
+    và danh sách các từ đã được người dùng đánh dấu ứng với từng chế độ dịch.
+    '''
     global favorite_dialog
     favorite_dialog = QDialog()
     favorite_dialog.setWindowTitle('Favorite')
@@ -195,6 +242,10 @@ def Out_history(item):
     history_dialog.close()
 
 def chuyen_mode(index):
+    '''
+    Hàm chuyen_mode sẽ được gọi khi người dùng thay đổi chế độ dịch, hàm có chức năng thay đổi dataset, lịch sử tìm kiếm ( history ), các từ đã được người dùng đánh dấu (favorite)
+    ứng với chế độ dịch được chọn
+    '''
     global CurrentTree,historylist,favorite_list
     if language_selection.currentText() == "Anh - Anh":
         CurrentTree = SuggestTree_Anh_Anh
