@@ -32,7 +32,7 @@ hàm press_button sẽ được gọi khi người dùng bấm nút search, hàm
 Hàm History_giaodien sẽ tạo ra giao diện của chức năng history khi người dùng bấm vào nút history, giao diện sẽ có nút để quay trở lại màn hình chính của app
 và danh sách các từ có trong history list tương ứng với chế độ dịch hiện tại.
 
-Hàm favorite_giaodien() sẽ tạo ra giao diện của chức năng favorite khi người dùng bấm vào nút favorite, giao diện sẽ có nút để quay trở lại màn hình chính của app
+Hàm favorite_giaodien sẽ tạo ra giao diện của chức năng favorite khi người dùng bấm vào nút favorite, giao diện sẽ có nút để quay trở lại màn hình chính của app
 và danh sách các từ đã được người dùng đánh dấu ứng với từng chế độ dịch.
 
 Hàm chuyen_mode sẽ được gọi khi người dùng thay đổi chế độ dịch, hàm có chức năng thay đổi dataset, lịch sử tìm kiếm ( history ), các từ đã được người dùng đánh dấu (favorite)
